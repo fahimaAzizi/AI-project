@@ -1,27 +1,30 @@
-import openai
-import pylint.lint
-import subprocess
-from fastapi import FastAPI, Form
+import speech_recognition as sr
+import pyttsx3
 
-# Initialize FastAPI app
-app = FastAPI()
+# Initialize text-to-speech engine
+engine = pyttsx3.init()
 
-# OpenAI API Key (Replace with your key)
-openai.api_key = "your_openai_api_key"
-
-# Function to analyze code with Pylint
-def analyze_code(code_snippet):
-    with open("temp.py", "w") as f:
-        f.write(code_snippet)
-    pylint_opts = ["temp.py"]
-    results = pylint.lint.Run(pylint_opts, do_exit=False)
-    return results.linter.reporter.data
-
-# Function to check security vulnerabilities with Bandit
-
-
-
+# Function to recognize and repeat speech
+def repeat_speech():
+    recognizer = sr.Recognizer()
     
-   
+    with sr.Microphone() as source:
+        print("Say something...")
+        recognizer.adjust_for_ambient_noise(source)  # Adjust for background noise
+        try:
+            audio = recognizer.listen(source)  # Listen for speech
+            text = recognizer.recognize_google(audio)  # Convert speech to text
+            print(f"You said: {text}")
+            
+            # Speak the recognized text
+            engine.say(text)
+            engine.runAndWait()
+            
+        except sr.UnknownValueError:
+            print("Sorry, I couldn't understand what you said.")
+        except sr.RequestError:
+            print("Could not connect to the speech recognition service.")
 
-
+# Run the repeater function in a loop
+while True:
+    repeat_speech()
