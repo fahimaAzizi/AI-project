@@ -105,3 +105,96 @@ def detect_bugs_endpoint(code: str = Form(...)):
         "pylint_report": pylint_report,
         "security_report": security_report
     }
+
+### project_root/app/config.py
+from pydantic import BaseSettings
+
+class Settings(BaseSettings):
+    OPENAI_API_KEY: str
+    GOOGLE_CLIENT_ID: str
+    GOOGLE_CLIENT_SECRET: str
+    GITHUB_CLIENT_ID: str
+    GITHUB_CLIENT_SECRET: str
+    SECRET_KEY: str
+
+    class Config:
+        env_file = ".env"
+
+settings = Settings()
+
+
+### project_root/app/services/gpt.py
+import openai
+from app.config import settings
+
+openai.api_key = settings.OPENAI_API_KEY
+
+def detect_bugs(code_snippet: str) -> str:
+    prompt = f"Find bugs in the following Python code and suggest fixes:\n\n{code_snippet}"
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are an expert code reviewer."},
+            {"role": "user", "content": prompt}
+        ]
+    )
+    return response["choices"][0]["message"]["content"]
+
+
+### project_root/app/services/pylint_analysis.py
+import pylint.lint
+from pathlib import Path
+
+def analyze_code(code_snippet: str, file_path: Path) -> dict:
+    file_path.write_text(code_snippet)
+    results = pylint.lint.Run([str(file_path)], do_exit=False)
+    return results.linter.reporter.data
+
+
+### project_root/app/services/bandit_scan.py
+import subprocess
+from pathlib import Path
+
+def check_security(code_snippet: str, file_path: Path) -> str:
+    file_path.write_text(code_snippet)
+    result = subprocess.run(["bandit", "-r", str(file_path)], capture_output=True, text=True)
+    return result.stdout
+
+
+### project_root/app/routes/bug_routes.py
+from fastapi import APIRouter, Form
+from pathlib import Path
+from app.services.gpt import detect_bugs
+from app.services.pylint_analysis import analyze_code
+from app.services.bandit_scan import check_security
+
+router = APIRouter()
+TEMP_FILE = Path("temp/temp.py")
+
+@router.post("/detect_bugs/")
+def detect_bugs_endpoint(code: str = Form(...)):
+    message = ""
+    if "youtube" in code.lower():
+        message += "Yes, there is YouTube.\n"
+    if "facebook" in code.lower():
+        message += "Yes, there is Facebook.\n"
+
+    try:
+        bug_report = detect_bugs(code)
+        pylint_report = analyze_code(code, TEMP_FILE)
+        security_report = check_security(code, TEMP_FILE)
+    except Exception as e:
+        return {"error": str(e)}
+
+    return {
+        "message": message.strip(),
+        "bug_report": bug_report,
+        "pylint_report": pylint_report,
+        "security_report": security_report
+    }
+
+
+
+
+
+
