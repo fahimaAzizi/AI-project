@@ -1,14 +1,15 @@
-from pydantic_settings import BaseSettings
+import openai
+from app.config import settings
 
-class Settings(BaseSettings):
-    OPENAI_API_KEY: str
-    GOOGLE_CLIENT_ID: str
-    GOOGLE_CLIENT_SECRET: str
-    GITHUB_CLIENT_ID: str
-    GITHUB_CLIENT_SECRET: str
-    SECRET_KEY: str
+openai.api_key = settings.OPENAI_API_KEY
 
-    class Config:
-        env_file = ".env"
-
-settings = Settings()
+def detect_bugs(code_snippet: str) -> str:
+    prompt = f"Find bugs in the following Python code and suggest fixes:\n\n{code_snippet}"
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are an expert code reviewer."},
+            {"role": "user", "content": prompt}
+        ]
+    )
+    return response["choices"][0]["message"]["content"]
