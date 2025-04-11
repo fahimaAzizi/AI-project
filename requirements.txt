@@ -1,0 +1,10 @@
+### project_root/requirements.txt
+fastapi
+uvicorn
+openai
+pylint
+bandit
+python-dotenv
+pydantic
+authlib
+starlette
