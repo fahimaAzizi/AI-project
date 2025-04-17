@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request, Form, Depends
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional, List
 import openai
 import sqlite3
@@ -38,10 +38,19 @@ cursor.execute('''
         timestamp TEXT
     )
 ''')
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS breathing_sessions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user TEXT,
+        duration INT,
+        timestamp TEXT
+    )
+''')
 conn.commit()
 
 # Pydantic Model for Check-In
-timestamp_now = lambda: datetime.utcnow().isoformat()
+def timestamp_now():
+    return datetime.now(timezone.utc).isoformat()
 
 class CheckIn(BaseModel):
     user: str
@@ -50,6 +59,11 @@ class CheckIn(BaseModel):
     hydration: int
     activity: str
     notes: Optional[str] = ""
+    timestamp: Optional[str] = timestamp_now()
+
+class BreathingSession(BaseModel):
+    user: str
+    duration: int  # Duration in seconds
     timestamp: Optional[str] = timestamp_now()
 
 # Helper: GPT-4 Based Wellness Tip Generator
@@ -74,14 +88,12 @@ def generate_tip(mood, sleep_hours, hydration, activity):
 # Endpoint: Daily Check-in
 @app.post("/check_in/")
 def check_in(data: CheckIn):
-    # Save data to DB
     cursor.execute('''
         INSERT INTO checkins (user, mood, sleep_hours, hydration, activity, notes, timestamp)
         VALUES (?, ?, ?, ?, ?, ?, ?)
     ''', (data.user, data.mood, data.sleep_hours, data.hydration, data.activity, data.notes, data.timestamp))
     conn.commit()
 
-    # Generate AI tip
     ai_tip = generate_tip(data.mood, data.sleep_hours, data.hydration, data.activity)
 
     return JSONResponse({
@@ -102,6 +114,16 @@ def get_check_ins(user: str):
         } for r in rows
     ]
     return {"check_ins": entries}
+
+# Endpoint: Save breathing session
+@app.post("/breathing/")
+def log_breathing(session: BreathingSession):
+    cursor.execute('''
+        INSERT INTO breathing_sessions (user, duration, timestamp)
+        VALUES (?, ?, ?)
+    ''', (session.user, session.duration, session.timestamp))
+    conn.commit()
+    return {"message": "Breathing session logged!", "timestamp": session.timestamp}
 
 # Root
 @app.get("/")
