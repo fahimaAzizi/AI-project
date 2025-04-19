@@ -22,7 +22,23 @@ def speak(audio):
     engine.runAndWait()
 
 def takeCommand():
-
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Listening.....")
+        r.pause_threshold = 1
+        r.energy_threshold = 300
+        try:
+            audio = r.listen(source, timeout=4, phrase_time_limit=4)
+            print("Recognizing...")
+            query = r.recognize_google(audio, language='en-US')
+            print(f"User said: {query}")
+            return query
+        except sr.UnknownValueError:
+            print("Sorry, I didn't catch that.")
+            return ""
+        except sr.RequestError:
+            print("Could not request results; check your network.")
+            return ""
 
 # Example usage
 speak("Hello! How can I help you?")
