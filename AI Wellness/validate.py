@@ -27,22 +27,30 @@ def takeCommand():
         print("Listening.....")
         r.pause_threshold = 1
         r.energy_threshold = 300
-        try:
-            audio = r.listen(source, timeout=4, phrase_time_limit=4)
-            print("Recognizing...")
-            query = r.recognize_google(audio, language='en-US')
-            print(f"User said: {query}")
-            return query
-        except sr.UnknownValueError:
-            print("Sorry, I didn't catch that.")
-            return ""
-        except sr.RequestError:
-            print("Could not request results; check your network.")
-            return ""
 
-# Example usage
-speak("Hello! How can I help you?")
-takeCommand()
+        audio = r.listen(source,0,4)
+    try:
+        print("Recognizing...")
+        query = r.recognize_google(audio, language='en-US')
+        print(f"User said: {query}\n")
+    except Exception as e:
+            print("Sorry, I didn't catch that.")
+            return "None"
+    return query
+if __name__== "__main__":
+    while True:
+        query = takeCommand().lower()
+        if " wake up" in query:
+            from greeMe import greetMe
+            greetMe()
+
+            while True:
+                query = takeCommand().lower()
+                if " go to sleep" in query:
+                   speak(" ok sir, you can call me anytime ")
+                   break
+
+
 
 
 
