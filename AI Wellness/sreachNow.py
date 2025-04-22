@@ -12,3 +12,28 @@ def takeCommand():
         r.energy_threshold = 300
 
         audio = r.listen(source,0,4)
+    try:
+        print("Recognizing...")
+        query = r.recognize_google(audio, language='en-US')
+        print(f"User said: {query}\n")
+    except Exception as e:
+            print("Sorry, I didn't catch that.")
+            return "None"
+    return query
+engine = pyttsx3.init("sapi5")
+voices = engine.getProperty("voices")
+engine.setProperty("voice", voices[0].id)
+engine.setProperty("rate", 170)
+
+
+
+def speak(audio):
+     engine.say(audio)
+     engine.runAndWait()
+
+def sreachGoogle(query):
+     if "google" in query:
+          import = wikipedia as google
+          
+
+
