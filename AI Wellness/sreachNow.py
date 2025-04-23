@@ -33,7 +33,21 @@ def speak(audio):
 
 def sreachGoogle(query):
      if "google" in query:
-          import = wikipedia as google
+        import wikipedia as googleScrap
+        query= query.replace("jarvis","")
+        query= query.replace("Google sreach","")
+        query= query.replace("google ","")
+        query= query.replace("youtube","")
+        speak("this is what i found on google")
+
+        try:
+           pywhatkit.search(query)
+           result =googleScrap.summary(query,1)
+           speak(result)
+        
+        except:
+             speak("No speakable output available")
           
+def        
 
 
