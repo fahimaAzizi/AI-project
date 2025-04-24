@@ -11,7 +11,8 @@
 #   return "helloMr."
 import pyttsx3
 import speech_recognition as sr  # use 'sr' for shorter reference
-
+import requests
+import bs4
 engine = pyttsx3.init("sapi5")
 voices = engine.getProperty("voices")
 engine.setProperty("voice", voices[0].id)
@@ -49,6 +50,28 @@ if __name__== "__main__":
                 if " go to sleep" in query:
                    speak(" ok sir, you can call me anytime ")
                    break
+
+                elif "hello" in query:
+                    speak("hello jee , how can i hellp you")
+                elif "what is you neme" in query:
+                    speak("nice name ")
+                
+                elif "are you okay " in query:
+                    speak("not like you")
+                
+                elif "thank you " in query:
+                    speak("our welcome, jee")
+                elif "google" in query:
+                    from searchNow import searchGoogle
+                    searchGoogle()
+                elif "youtube" in query:
+                    from searchNow import searchyoutube
+                    searchyoutube()
+
+                elif "wikipedia" in query:
+                    
+        
+        
 
 
 
