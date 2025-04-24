@@ -7,12 +7,15 @@
 # app =FastAPI()
 
 # @app.post("/hello")
-# daf hello(req: add):
-#   return "helloMr."
+# def hello(req: add):  # Fixed 'daf' to 'def'
+#     return "helloMr."
+
 import pyttsx3
 import speech_recognition as sr  # use 'sr' for shorter reference
 import requests
-import bs4
+from bs4 import BeautifulSoup  # Fixed typo 'BeautifulSop'
+import datetime
+
 engine = pyttsx3.init("sapi5")
 voices = engine.getProperty("voices")
 engine.setProperty("voice", voices[0].id)
@@ -29,16 +32,17 @@ def takeCommand():
         r.pause_threshold = 1
         r.energy_threshold = 300
 
-        audio = r.listen(source,0,4)
+        audio = r.listen(source, 0, 4)
     try:
         print("Recognizing...")
         query = r.recognize_google(audio, language='en-US')
         print(f"User said: {query}\n")
     except Exception as e:
-            print("Sorry, I didn't catch that.")
-            return "None"
+        print("Sorry, I didn't catch that.")
+        return "None"
     return query
-if __name__== "__main__":
+
+if __name__ == "__main__":
     while True:
         query = takeCommand().lower()
         if " wake up" in query:
@@ -48,17 +52,15 @@ if __name__== "__main__":
             while True:
                 query = takeCommand().lower()
                 if " go to sleep" in query:
-                   speak(" ok sir, you can call me anytime ")
-                   break
+                    speak(" ok sir, you can call me anytime ")
+                    break
 
                 elif "hello" in query:
                     speak("hello jee , how can i hellp you")
                 elif "what is you neme" in query:
                     speak("nice name ")
-                
                 elif "are you okay " in query:
                     speak("not like you")
-                
                 elif "thank you " in query:
                     speak("our welcome, jee")
                 elif "google" in query:
@@ -68,14 +70,25 @@ if __name__== "__main__":
                     from searchNow import searchyoutube
                     searchyoutube()
 
-                elif "wikipedia" in query:
-                    
-        
-        
+                elif "temperatuer" in query:
+                    search = "temperatuer in quetta pakistan"
+                    url = f"https://www.google.com/search?q={search}"
+                    r = requests.get(url)
+                    data = BeautifulSoup(r.text, "html.parser")  # Fixed typo
+                    temp = data.find("div", class_="BNeawe").text  # Completed statement
+                    speak(f"current {search} is {temp}")
 
+                elif "weather" in query:
+                    search = "temperatuer in quetta pakistan"
+                    url = f"https://www.google.com/search?q={search}"
+                    r = requests.get(url)
+                    data = BeautifulSoup(r.text, "html.parser")  # Fixed typo
+                    temp = data.find("div", class_="BNeawe").text  # Completed statement
+                    speak(f"current {search} is {temp}")
 
-
-
-
-
- 
+                elif "the time " in query:
+                    strTime = datetime.datetime.now().strftime("%H:%M")
+                    speak(f"sir, the time is {strTime}")
+                elif "i am done" in query:
+                    speak("going to sleep,sir")
+                    exit()
