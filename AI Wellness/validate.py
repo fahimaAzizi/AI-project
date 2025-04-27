@@ -64,10 +64,10 @@ if __name__ == "__main__":
                 elif "thank you " in query:
                     speak("our welcome, jee")
                 elif "google" in query:
-                    from searchNow import searchGoogle
+                    from searchNow import searchGoogle # type: ignore
                     searchGoogle()
                 elif "youtube" in query:
-                    from searchNow import searchyoutube
+                    from searchNow import searchyoutube # type: ignore
                     searchyoutube()
 
                 elif "temperatuer" in query:

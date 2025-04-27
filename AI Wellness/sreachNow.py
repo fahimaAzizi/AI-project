@@ -3,6 +3,7 @@ import pyttsx3
 import speech_recognition as sr 
 import pywhatkit
 import wikipedia
+import webbrowser
 
 def takeCommand():
     r = sr.Recognizer()
@@ -48,6 +49,27 @@ def sreachGoogle(query):
         except:
              speak("No speakable output available")
           
-def        
+def sreachYoutube(query):
+     if "youtube" in query:
+       speak("this is what i found for you sreach!")
+       query = query.replace("youtube search","") 
+       query = query.replace("youtube","")        
+       query = query.replace("jarvis","") 
+       web ="https://www.youtube.com/watch?v=ROdeOd75XdY"+query
+       webbrowser.open(web)
+       speak("done, sir")
+
+def searchWikipedia(query):
+    if "wikipedia" in query:
+        speak("sreach form wikipedia....")
+        query = query.replace("wikipedia") 
+        query = query.replace("search wikipedia ","")        
+        query = query.replace("jarvis","") 
+        results = wikipedia.summary(query,setences =2)
+        speak("According to wikipedia..")
+        print(results)
+        speak(results)
+        
+
 
 
