@@ -10,6 +10,7 @@
 # def hello(req: add):  # Fixed 'daf' to 'def'
 #     return "helloMr."
 
+from signal import alarm
 import pyttsx3
 import speech_recognition as sr  # use 'sr' for shorter reference
 import requests
@@ -85,7 +86,12 @@ if __name__ == "__main__":
                     data = BeautifulSoup(r.text, "html.parser")  # Fixed typo
                     temp = data.find("div", class_="BNeawe").text  # Completed statement
                     speak(f"current {search} is {temp}")
-
+                elif "set an alarm" in query:
+                    print("input time example:- 10 and 10 and 10")
+                    speak("set the time")
+                    a = input("please tell the time:-")
+                    alarm(a)
+                    speak ("Done,sir")
                 elif "the time " in query:
                     strTime = datetime.datetime.now().strftime("%H:%M")
                     speak(f"sir, the time is {strTime}")
