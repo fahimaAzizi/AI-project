@@ -16,6 +16,9 @@ import speech_recognition as sr  # use 'sr' for shorter reference
 import requests
 from bs4 import BeautifulSoup  # Fixed typo 'BeautifulSop'
 import datetime
+import pyautogui
+import os
+import Key
 
 engine = pyttsx3.init("sapi5")
 voices = engine.getProperty("voices")
@@ -64,6 +67,40 @@ if __name__ == "__main__":
                     speak("not like you")
                 elif "thank you " in query:
                     speak("our welcome, jee")
+                elif "pause" in query:
+                    pyautogui.press("p")
+                    speak("video pause")
+                elif "play" in query:
+                    speak("video play")
+                    pyautogui.press("k")
+                elif "mute" in query:
+                    pyautogui.press("m")
+                    speak("video mute")
+                elif "volumw up" in query:
+                    pyautogui.press("m")
+                    speak("video volume up")
+                    from keyboard import volumeup # type: ignore
+                    speak("turning volume up sir")
+                    volumedown() # type: ignore
+
+                elif " open" in query:
+                    from Dictapp import openappweb
+                    openappweb(query)
+                elif" close" in query:
+                    from Dictapp import closeappweb
+                    closeappweb(query)
+                
+                
+                
+                
+                
+                elif  "opne" in query:
+                    from Dictapp import openappweb
+                    openappweb(query)
+                elif "close" in query:
+                    from Dictapp import closeappweb
+                    closeappweb(query)
+                
                 elif "google" in query:
                     from searchNow import searchGoogle # type: ignore
                     searchGoogle()
@@ -98,3 +135,13 @@ if __name__ == "__main__":
                 elif "i am done" in query:
                     speak("going to sleep,sir")
                     exit()
+                elif " remember that " in query:
+                    rememberMessage = query.replace("remember that ","")
+                    rememberMessage = query.replace("jarvis","")
+                    speak("you told me to remember that "+rememberMessage)
+                    remember = open("remember.txt","w")
+                    remember.write(rememberMessage)
+                    remember.close()
+                elif " what do you remember" in query:
+                    remember= open("remember.txt","r")
+                    speak("you told me to remember that "+remember.read())
