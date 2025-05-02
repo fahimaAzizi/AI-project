@@ -11,6 +11,7 @@
 #     return "helloMr."
 
 from signal import alarm
+import webbrowser
 import pyttsx3
 import speech_recognition as sr  # use 'sr' for shorter reference
 import requests
@@ -18,7 +19,8 @@ from bs4 import BeautifulSoup  # Fixed typo 'BeautifulSop'
 import datetime
 import pyautogui
 import os
-import Key
+import random
+from keyboard import volumeup # type: ignore
 
 engine = pyttsx3.init("sapi5")
 voices = engine.getProperty("voices")
@@ -67,6 +69,16 @@ if __name__ == "__main__":
                     speak("not like you")
                 elif "thank you " in query:
                     speak("our welcome, jee")
+                elif " tired" in query:
+                    speak("playing your favourite songs, sir")
+                    a = (1,2,3,4)
+                    b = random.choice(a)
+                    if b==1:
+                        webbrowser.open("AI Wellness/surnames.mp3")  
+                
+                
+                
+                
                 elif "pause" in query:
                     pyautogui.press("p")
                     speak("video pause")
@@ -107,6 +119,15 @@ if __name__ == "__main__":
                 elif "youtube" in query:
                     from searchNow import searchyoutube # type: ignore
                     searchyoutube()
+                
+                elif "calculate" in query:
+                    pass
+                
+
+
+
+
+                
 
                 elif "temperatuer" in query:
                     search = "temperatuer in quetta pakistan"
@@ -144,4 +165,4 @@ if __name__ == "__main__":
                     remember.close()
                 elif " what do you remember" in query:
                     remember= open("remember.txt","r")
-                    speak("you told me to remember that "+remember.read())
+                    speak("you told me to  that "+remember.read())
