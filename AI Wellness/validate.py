@@ -22,6 +22,20 @@ import os
 import random
 from keyboard import volumeup # type: ignore
 
+for i in range(3):
+    a = input("inter password to opne javis:-")
+    pw_file = open("password.txt","r")
+    pw= pw_file.read()
+    pw_file.close()
+    if (a==pw):
+        print("WELCOME SIR ! PLEAS SPEKAK[WAKE UP ] TO LOAD ME UP")
+        break
+    elif (1 ==pw):
+        exit()
+    elif (a !=pw):
+        print("try again")
+
+
 engine = pyttsx3.init("sapi5")
 voices = engine.getProperty("voices")
 engine.setProperty("voice", voices[0].id)
@@ -121,8 +135,14 @@ if __name__ == "__main__":
                     searchyoutube()
                 
                 elif "calculate" in query:
-                    pass
-                
+                    from calculateNumber import wolfRamAIpha
+                    from calculateNumber import Calc
+                    query = query.replace("calculate","")
+                    query = query.replace("jarvis","")
+                    Calc(query)
+                elif "whatsapp" in query:
+                    from whatsapp import sendMessage
+                    sendMessage
 
 
 
@@ -166,3 +186,12 @@ if __name__ == "__main__":
                 elif " what do you remember" in query:
                     remember= open("remember.txt","r")
                     speak("you told me to  that "+remember.read())
+                
+                elif "shotdown system" in query:
+                    speak("Are you sure you want to shotdown")
+                    shutdown = input("Do you want to shutdown your computer?(yes/no)")
+                    if shutdown =="yes":
+                        os.system("shoutdown /s /t 1")
+
+                    elif shutdown =="no":
+                        break
