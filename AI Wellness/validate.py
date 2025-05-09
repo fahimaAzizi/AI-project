@@ -21,6 +21,7 @@ import pyautogui
 import os
 import random
 from keyboard import volumeup # type: ignore
+from pygame import mixer
 
 for i in range(3):
     a = input("inter password to opne javis:-")
@@ -74,6 +75,62 @@ if __name__ == "__main__":
                 if " go to sleep" in query:
                     speak(" ok sir, you can call me anytime ")
                     break
+
+
+
+
+
+
+
+
+############################################
+                elif "change passeord" in query:
+                    speak("what's the new password")
+                    new_pw = input("enter the new passwod\n")
+                    new_password = open("password.txt","w")
+                    new_password.write(new_pw)
+                    new_password.close()
+                    speak("cone sir")
+                    speak(f"your new password is {new_pw}")
+             
+
+                elif "schedule my days" in query:
+                    tasks = []
+                    speak ("do you want to clear old tasks (pleas speak yes or no)")
+                    query =takeCommand().lower()
+                    if "yes" in query:
+                          file = open("tasks.txt", "w")
+                          file.write(" ")
+                          file.close()
+                          no_tasks = int(input("Enter the no. of tasks :- "))
+                          tasks = []
+                          for i in range(no_tasks):
+                              tasks.append(input("Enter the task :- "))
+                              file = open("tasks.txt", "a")
+                              file.write(f"{i}. {tasks[i]}\n")
+                              file.close()
+                    elif "no" in query:
+                         no_tasks = int(input("Enter the no. of tasks :- "))
+                         tasks = [] 
+                         for i in range(no_tasks):
+                           tasks.append(input("Enter the task :- "))
+                           file = open("tasks.txt", "a")
+                           file.write(f"{i}. {tasks[i]}\n")
+                           file.close()
+                    elif "show my schedule" in query:
+                        file = open("tasks.txt", "r")
+                        content = file.read()
+                        file.close()
+                        print(content)
+                                   
+
+
+
+
+
+
+
+
 
                 elif "hello" in query:
                     speak("hello jee , how can i hellp you")
