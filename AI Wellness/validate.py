@@ -121,7 +121,15 @@ if __name__ == "__main__":
                         file = open("tasks.txt", "r")
                         content = file.read()
                         file.close()
-                        print(content)
+                        mixer.init()
+                        mixer.music.load("any music you want.mp3")
+                        mixer.music.play()
+                        norification.notify( # type: ignore
+                             title = " my scheudule :-",
+                             message = content,
+                             timeout =15
+
+                         )
                                    
 
 
