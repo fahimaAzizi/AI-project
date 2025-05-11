@@ -130,6 +130,22 @@ if __name__ == "__main__":
                              timeout =15
 
                          )
+                    elif " open" in query:
+                        query = query.replace("open","")
+                        query = query.replace("jarvis","")
+                        pyautogui.press("super")
+                        pyautogui.typewrite(query)
+                        pyautogui.sleep(2)
+                        pyautogui.press("enter")
+
+                    elif "internet speed" in query:
+                        wifi = speedtest.Speedtest()
+                        upload_net = wifi.upload()/1048576
+                        download_net =wifi.download()/1048576
+                        print("wifi upload speed is ",upload_net)
+                        print("wifi download speed is ",download_net)
+                        speak(f"wifi upload speed is {upload_net}")
+                        speak(f"wifi download speed is {download_net}")
                                    
 
 
